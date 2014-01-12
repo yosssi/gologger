@@ -6,7 +6,7 @@ gologger brings a logging function to the Go language.
 
 ## Installation
 
-	$ go get github.com/yosssi/gologger.git
+	$ go get github.com/yosssi/gologger
 
 ## Examples
 
