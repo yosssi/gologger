@@ -42,6 +42,10 @@ type Logger struct {
 	OutputFileColored bool
 }
 
+func GetLogger(m map[string]string) Logger {
+	return Logger{Name: m["Name"], Level: m["Level"], File: m["File"], OutputFileColored: m["OutputFileColored"] == "true"}
+}
+
 func (logger *Logger) Trace(messages ...interface{}) {
 	logger.output(LevelTrace, messages...)
 }

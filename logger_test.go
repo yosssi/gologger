@@ -135,6 +135,19 @@ func TestLevelProperties(t *testing.T) {
 	checkDegreeColor(t, LevelFatal, degreeFatal, colorPink)
 }
 
+func TestGetLogger(t *testing.T) {
+	name := "TestGetLogger"
+	level := LevelWarn
+	file := "./testGetLogger.log"
+	outputFileColored := "true"
+
+	m := map[string]string{"Name": name, "Level": level, "File": file, "OutputFileColored": outputFileColored}
+	logger := GetLogger(m)
+	if logger.Name != name || logger.File != file || !logger.OutputFileColored {
+		t.Error("logger is invalid.")
+	}
+}
+
 func checkDegreeColor(t *testing.T, level string, degreeExpected int, colorExpected string) {
 	degree, color := levelProperties(level)
 	if degree != degreeExpected || color != colorExpected {
