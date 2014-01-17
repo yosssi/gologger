@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -33,37 +32,38 @@ const (
 
 	timeFormatLayout string = "2006-01-02 15:04:05.000"
 
-	logFormat string = "%s[%s] [%s] %s %s- %s\n"
+	logFormat string = "%s%s %s %s %s- "
 )
 
 type Logger struct {
-	Name  string
-	Level string
-	File  string
+	Name              string
+	Level             string
+	File              string
+	OutputFileColored bool
 }
 
-func (logger *Logger) Trace(messages ...string) {
-	logger.output(LevelTrace, messages)
+func (logger *Logger) Trace(messages ...interface{}) {
+	logger.output(LevelTrace, messages...)
 }
 
-func (logger *Logger) Debug(messages ...string) {
-	logger.output(LevelDebug, messages)
+func (logger *Logger) Debug(messages ...interface{}) {
+	logger.output(LevelDebug, messages...)
 }
 
-func (logger *Logger) Info(messages ...string) {
-	logger.output(LevelInfo, messages)
+func (logger *Logger) Info(messages ...interface{}) {
+	logger.output(LevelInfo, messages...)
 }
 
-func (logger *Logger) Warn(messages ...string) {
-	logger.output(LevelWarn, messages)
+func (logger *Logger) Warn(messages ...interface{}) {
+	logger.output(LevelWarn, messages...)
 }
 
-func (logger *Logger) Error(messages ...string) {
-	logger.output(LevelError, messages)
+func (logger *Logger) Error(messages ...interface{}) {
+	logger.output(LevelError, messages...)
 }
 
-func (logger *Logger) Fatal(messages ...string) {
-	logger.output(LevelFatal, messages)
+func (logger *Logger) Fatal(messages ...interface{}) {
+	logger.output(LevelFatal, messages...)
 }
 
 func (logger *Logger) isOutput(degree int) bool {
@@ -71,7 +71,7 @@ func (logger *Logger) isOutput(degree int) bool {
 	return loggerDegree <= degree
 }
 
-func (logger *Logger) output(level string, messages []string) {
+func (logger *Logger) output(level string, messages ...interface{}) {
 	degree, color := levelProperties(level)
 	if logger.isOutput(degree) {
 		if logger.File != "" {
@@ -81,10 +81,24 @@ func (logger *Logger) output(level string, messages []string) {
 				return
 			}
 			writer := bufio.NewWriter(file)
-			fmt.Fprintf(writer, logFormat, color, time.Now().Format(timeFormatLayout), level, logger.Name, colorNormal, strings.Join(messages, " "))
+			fmt.Fprintf(writer, logFormat, "", time.Now().Format(timeFormatLayout), level, logger.Name, "")
+			fmt.Fprintln(writer, messages...)
 			writer.Flush()
+			if logger.OutputFileColored {
+				fileColoredPath := logger.File + ".colored"
+				file, err = os.OpenFile(fileColoredPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+				if err != nil {
+					fmt.Printf("Can't open the file: %s\n", fileColoredPath)
+					return
+				}
+				writer := bufio.NewWriter(file)
+				fmt.Fprintf(writer, logFormat, color, time.Now().Format(timeFormatLayout), level, logger.Name, colorNormal)
+				fmt.Fprintln(writer, messages...)
+				writer.Flush()
+			}
 		} else {
-			fmt.Printf(logFormat, color, time.Now().Format(timeFormatLayout), level, logger.Name, colorNormal, strings.Join(messages, " "))
+			fmt.Printf(logFormat, color, time.Now().Format(timeFormatLayout), level, logger.Name, colorNormal)
+			fmt.Println(messages...)
 		}
 	}
 }

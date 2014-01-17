@@ -81,10 +81,10 @@ func TestError(t *testing.T) {
 
 func TestFatal(t *testing.T) {
 	logger := Logger{Name: "TestFatal01", Level: LevelFatal}
-	logger.Fatal("This message should be shown.")
+	logger.Fatal("This message should be shown.", "This is an optional message.")
 
 	logger = Logger{Name: "TestFatal02", Level: LevelFatal, File: file}
-	logger.Fatal("This message should be shown.")
+	logger.Fatal("This message should be shown.", "This is an optional message.")
 }
 
 func TestIsOutput(t *testing.T) {
@@ -105,16 +105,24 @@ func TestIsOutput(t *testing.T) {
 
 func TestOutput(t *testing.T) {
 	logger := Logger{Name: "TestOutput01", Level: LevelInfo}
-	logger.output(LevelDebug, []string{"This message should not be shown."})
+	logger.output(LevelDebug, "This message should not be shown.")
 
 	logger = Logger{Name: "TestOutput02", Level: LevelInfo}
-	logger.output(LevelInfo, []string{"This message should be shown on the stdout."})
+	logger.output(LevelInfo, "This message should be shown on the stdout.")
 
 	logger = Logger{Name: "TestOutput03", Level: LevelInfo, File: "/a/b/c/d/e/f/g/h"}
-	logger.output(LevelInfo, []string{"An error should occur and this message should not be shown."})
+	logger.output(LevelInfo, "An error should occur and this message should not be shown.")
 
 	logger = Logger{Name: "TestTrace04", Level: LevelInfo, File: file}
 	logger.Info("This message should be shown on the file:", file)
+
+	logger = Logger{Name: "TestLogger", Level: LevelTrace, File: file, OutputFileColored: true}
+	logger.Trace("This branch was passed.")
+	logger.Debug("The value of the parameter \"name\":", "Taro")
+	logger.Info("The server is listening on port 8080.")
+	logger.Warn("The method \"getName()\" is deprecated.")
+	logger.Error("Could not connect to the database.")
+	logger.Fatal("An application error occurred.")
 }
 
 func TestLevelProperties(t *testing.T) {
