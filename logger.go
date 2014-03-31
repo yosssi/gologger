@@ -50,24 +50,48 @@ func (logger *Logger) Trace(messages ...interface{}) {
 	logger.output(LevelTrace, messages...)
 }
 
+func (logger *Logger) Tracef(format string, messages ...interface{}) {
+	logger.output(LevelTrace, fmt.Sprintf(format, messages...))
+}
+
 func (logger *Logger) Debug(messages ...interface{}) {
 	logger.output(LevelDebug, messages...)
+}
+
+func (logger *Logger) Debugf(format string, messages ...interface{}) {
+	logger.output(LevelDebug, fmt.Sprintf(format, messages...))
 }
 
 func (logger *Logger) Info(messages ...interface{}) {
 	logger.output(LevelInfo, messages...)
 }
 
+func (logger *Logger) Infof(format string, messages ...interface{}) {
+	logger.output(LevelInfo, fmt.Sprintf(format, messages...))
+}
+
 func (logger *Logger) Warn(messages ...interface{}) {
 	logger.output(LevelWarn, messages...)
+}
+
+func (logger *Logger) Warnf(format string, messages ...interface{}) {
+	logger.output(LevelWarn, fmt.Sprintf(format, messages...))
 }
 
 func (logger *Logger) Error(messages ...interface{}) {
 	logger.output(LevelError, messages...)
 }
 
+func (logger *Logger) Errorf(format string, messages ...interface{}) {
+	logger.output(LevelError, fmt.Sprintf(format, messages...))
+}
+
 func (logger *Logger) Fatal(messages ...interface{}) {
 	logger.output(LevelFatal, messages...)
+}
+
+func (logger *Logger) Fatalf(format string, messages ...interface{}) {
+	logger.output(LevelFatal, fmt.Sprintf(format, messages...))
 }
 
 func (logger *Logger) isOutput(degree int) bool {
