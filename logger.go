@@ -42,6 +42,10 @@ type Logger struct {
 	OutputFileColored bool
 }
 
+func NewLogger(name, level, file string, outputFileColored bool) *Logger {
+	return &Logger{Name: name, Level: level, File: file, OutputFileColored: outputFileColored}
+}
+
 func GetLogger(m map[string]string) Logger {
 	return Logger{Name: m["Name"], Level: m["Level"], File: m["File"], OutputFileColored: m["OutputFileColored"] == "true"}
 }
